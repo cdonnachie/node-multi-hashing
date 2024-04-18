@@ -139,6 +139,13 @@ module.exports = {
 
   /**
    * @param input {Buffer} Initial buffer to hash
+   * @param profile {number} Profile integer
+   * @returns {Buffer} Hashing result
+   */
+  'neoscrypt': algorithms.neoscrypt,
+
+  /**
+   * @param input {Buffer} Initial buffer to hash
    * @returns {Buffer} Hashing result
    */
   'nist5': algorithms.nist5,

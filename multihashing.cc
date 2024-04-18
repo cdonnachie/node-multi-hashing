@@ -18,6 +18,7 @@
 #include "algorithms/main/keccak/keccak.h"
 #include "algorithms/main/lyra2re/lyra2re.h"
 #include "algorithms/main/minotaur/minotaur.h"
+#include "algorithms/main/neoscrypt/neoscrypt.h"
 #include "algorithms/main/nist5/nist5.h"
 #include "algorithms/main/quark/quark.h"
 #include "algorithms/main/qubit/qubit.h"
@@ -435,6 +436,24 @@ NAN_METHOD(minotaurx) {
   info.GetReturnValue().Set(Nan::CopyBuffer(output, 32).ToLocalChecked());
 }
 
+// Neoscrypt Algorithm
+NAN_METHOD(neoscrypt) {
+
+  // Check Arguments for Errors
+  if (info.Length() < 2)
+    return THROW_ERROR_EXCEPTION("You must provide one argument.");
+
+  // Process/Define Passed Parameters
+  char * input = Buffer::Data(Nan::To<v8::Object>(info[0]).ToLocalChecked());
+  int profile = info[1]->IntegerValue(Nan::GetCurrentContext()).FromJust();
+  char output[32];
+
+  // Hash Input Data and Return Output
+  neoscrypt_hash(input, output, profile);
+  info.GetReturnValue().Set(Nan::CopyBuffer(output, 32).ToLocalChecked());
+
+}
+
 // Nist5 Algorithm
 NAN_METHOD(nist5) {
 
@@ -724,9 +743,10 @@ NAN_MODULE_INIT(init) {
   Nan::Set(target, Nan::New("kawpow").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(kawpow)).ToLocalChecked());
   Nan::Set(target, Nan::New("keccak").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(keccak)).ToLocalChecked());
   Nan::Set(target, Nan::New("lyra2re").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(lyra2re)).ToLocalChecked());
+  Nan::Set(target, Nan::New("meowpow").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(meowpow)).ToLocalChecked());
   Nan::Set(target, Nan::New("minotaur").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(minotaur)).ToLocalChecked());
   Nan::Set(target, Nan::New("minotaurx").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(minotaurx)).ToLocalChecked());
-  Nan::Set(target, Nan::New("meowpow").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(meowpow)).ToLocalChecked());
+  Nan::Set(target, Nan::New("neoscrypt").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(neoscrypt)).ToLocalChecked());
   Nan::Set(target, Nan::New("nist5").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(nist5)).ToLocalChecked());
   Nan::Set(target, Nan::New("quark").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(quark)).ToLocalChecked());
   Nan::Set(target, Nan::New("qubit").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(qubit)).ToLocalChecked());
